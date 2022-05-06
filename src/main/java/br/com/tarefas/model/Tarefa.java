@@ -13,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tarefas")
@@ -21,12 +24,19 @@ public class Tarefa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	
+	@NotBlank(message = "O campo descricao não pode estar vazio.")
+	@Size(min = 5, max = 150, message = "O campo descricao deve ter entre 5 a 150 caracteres.")
 	@Column(name = "ds_tarefa", nullable = false, length = 150)
 	private String descricao;
+	
 	@Enumerated(EnumType.STRING)
 	private TarefaStatus status;
+	
+	@FutureOrPresent(message = "O campo data de entrega deve ser de hoje pra frente.")
 	private LocalDate dataEntrega;
 	private boolean visivel;
+	
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private TarefaCategoria categoria;
