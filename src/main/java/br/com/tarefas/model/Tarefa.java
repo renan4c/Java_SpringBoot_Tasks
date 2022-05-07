@@ -24,6 +24,7 @@ public class Tarefa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
+	@Column(name = "ds_tarefa", nullable = false, length = 150)
 	private String descricao;
 	
 	@Enumerated(EnumType.STRING)
