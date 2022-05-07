@@ -24,18 +24,12 @@ public class Tarefa {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	
-	@NotBlank(message = "{tarefa.descricao.not-blank}")
-	@Size(min = 5, max = 150, message = "{tarefa.descricao.size}")
-	@Column(name = "ds_tarefa", nullable = false, length = 150)
 	private String descricao;
 	
 	@Enumerated(EnumType.STRING)
 	private TarefaStatus status = TarefaStatus.ABERTO;
-	
-	@FutureOrPresent(message = "{tarefa.descricao.future-or-present}")
 	private LocalDate dataEntrega;
-	private boolean visivel;
+	private boolean visivel = true;
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
