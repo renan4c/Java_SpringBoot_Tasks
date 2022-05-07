@@ -17,8 +17,11 @@ public class TarefaServiceIntegrationTest {
 	
 	@Test
 	void deveIniciarTarefa() {
-		Tarefa tarefa = service.iniciarTarefaPorId(3);
-		Assertions.assertEquals(TarefaStatus.EM_ANDAMENTO, tarefa.getStatus());
+		Tarefa t = service.getTarefaPorId(3);
+		t.setStatus(TarefaStatus.ABERTO);
+		service.salvarTarefa(t);
+		t = service.iniciarTarefaPorId(3);
+		Assertions.assertEquals(TarefaStatus.EM_ANDAMENTO, t.getStatus());
 	}
 	
 	@Test
@@ -27,5 +30,23 @@ public class TarefaServiceIntegrationTest {
 		tarefa.setStatus(TarefaStatus.CONCLUIDA);
 		service.salvarTarefa(tarefa);
 		Assertions.assertThrows(InvalidParameterException.class, () -> service.iniciarTarefaPorId(3));
+	}
+	
+	@Test
+	void naoDeveCancelarTarefaConcluida() {
+		Tarefa t = service.getTarefaPorId(3);
+		t.setStatus(TarefaStatus.CONCLUIDA);
+		service.salvarTarefa(t);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> service.cancelarTarefaPorId(3));
+	}
+	
+	@Test
+	void naoDeveConcluirTarefaCancelada() {
+		Tarefa t = service.getTarefaPorId(3);
+		t.setStatus(TarefaStatus.CANCELADA);
+		service.salvarTarefa(t);
+		
+		Assertions.assertThrows(InvalidParameterException.class, () -> service.concluirTarefaPorId(3));
 	}
 }
