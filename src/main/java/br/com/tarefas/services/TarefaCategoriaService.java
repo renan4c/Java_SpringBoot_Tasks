@@ -3,6 +3,8 @@ package br.com.tarefas.services;
 import java.security.InvalidParameterException;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +21,22 @@ public class TarefaCategoriaService {
 		return repositorio.findAll();
 	}
 	
+	public TarefaCategoria getCategoria(Integer id) {
+		if(id < 1)
+			throw new EntityNotFoundException();
+		return repositorio.findById(id).orElse(null);
+	}
+	
 	public TarefaCategoria salvaTarefaCategoria(TarefaCategoria tarefaCategoria) {
+		if(tarefaCategoria == null)
+			return null;
 		return repositorio.save(tarefaCategoria);
 	}
 
 	public void deletaTarefaCategoria(Integer id) {
-		if(id != null && id > 0)
-			repositorio.deleteById(id);
-		else 
-			throw new InvalidParameterException("O id da tarefa categoria deve ser um número maior que zero");
+		if(id < 1)
+			throw new EntityNotFoundException();
+		repositorio.deleteById(id);
 	}
+	
 }

@@ -37,6 +37,13 @@ public class TarefaService {
 		repositorio.deleteById(id);
 	}
 	
+	public Tarefa abrirTarefaPorId(Integer id) {
+		Tarefa tarefa = getTarefaPorId(id);
+		tarefa.setStatus(TarefaStatus.ABERTO);
+		repositorio.save(tarefa);
+		return tarefa;
+	}
+	
 	public Tarefa iniciarTarefaPorId(Integer id) {
 		Tarefa tarefa = getTarefaPorId(id);
 		if(!TarefaStatus.ABERTO.equals(tarefa.getStatus())) {

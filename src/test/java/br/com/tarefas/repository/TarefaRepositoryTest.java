@@ -17,7 +17,7 @@ public class TarefaRepositoryTest {
 	@Test
 	void testeFindByNomeCategoria() {
 		List<Tarefa> tarefas = respositorio.findByNomeCategoria("Estudos");
-		Assertions.assertEquals(1, tarefas.size());
+		Assertions.assertEquals(2, tarefas.size());
 	}
 	@Test
 	void tarefasPorCategoria() {
