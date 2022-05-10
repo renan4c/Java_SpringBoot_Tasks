@@ -1,6 +1,5 @@
 package br.com.tarefas.services;
 
-import java.security.InvalidParameterException;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -47,7 +46,7 @@ public class TarefaService {
 	public Tarefa iniciarTarefaPorId(Integer id) {
 		Tarefa tarefa = getTarefaPorId(id);
 		if(!TarefaStatus.ABERTO.equals(tarefa.getStatus())) {
-			throw new InvalidParameterException();
+			throw new IllegalStateException("Não pode iniciar uma tarefa que não esteja com status ABERTO");
 		}
 				
 		tarefa.setStatus(TarefaStatus.EM_ANDAMENTO);
@@ -59,7 +58,7 @@ public class TarefaService {
 		Tarefa tarefa = getTarefaPorId(id);
 		
 		if(TarefaStatus.CANCELADA.equals(tarefa.getStatus())) {
-			throw new InvalidParameterException();
+			throw new IllegalStateException("Não pode concluir uma tarefa que está com status CANCELADA");
 		}
 		
 		tarefa.setStatus(TarefaStatus.CONCLUIDA);
@@ -71,7 +70,7 @@ public class TarefaService {
 		Tarefa tarefa = getTarefaPorId(id);
 		
 		if(TarefaStatus.CONCLUIDA.equals(tarefa.getStatus())) {
-			throw new InvalidParameterException();
+			throw new IllegalStateException("Não pode CANCELAR uma tarefa que está com status concluída");
 		}
 		
 		tarefa.setStatus(TarefaStatus.CANCELADA);
