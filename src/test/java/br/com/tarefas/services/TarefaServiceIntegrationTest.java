@@ -1,7 +1,5 @@
 package br.com.tarefas.services;
 
-import java.security.InvalidParameterException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,38 +13,46 @@ public class TarefaServiceIntegrationTest {
 	@Autowired
 	private TarefaService service;
 	
+	private Integer id = 4;
+
+	private Tarefa abrirTarefa() {
+		Tarefa tarefa = service.abrirTarefaPorId(id);
+		service.salvarTarefa(tarefa);
+		return tarefa;
+	}
+	
 	@Test
 	void deveIniciarTarefa() {
-		Tarefa t = service.getTarefaPorId(3);
+		Tarefa t = service.getTarefaPorId(id);
 		t.setStatus(TarefaStatus.ABERTO);
 		service.salvarTarefa(t);
-		t = service.iniciarTarefaPorId(3);
+		t = service.iniciarTarefaPorId(id);
 		Assertions.assertEquals(TarefaStatus.EM_ANDAMENTO, t.getStatus());
 	}
 	
 	@Test
 	void naoDeveIniciarTarefaDiferenteDeAberto() {
-		Tarefa tarefa = service.getTarefaPorId(3);
+		Tarefa tarefa = abrirTarefa();
 		tarefa.setStatus(TarefaStatus.CONCLUIDA);
 		service.salvarTarefa(tarefa);
-		Assertions.assertThrows(InvalidParameterException.class, () -> service.iniciarTarefaPorId(3));
+		Assertions.assertThrows(IllegalStateException.class, () -> service.iniciarTarefaPorId(id));
 	}
 	
 	@Test
 	void naoDeveCancelarTarefaConcluida() {
-		Tarefa t = service.getTarefaPorId(3);
-		t.setStatus(TarefaStatus.CONCLUIDA);
-		service.salvarTarefa(t);
+		Tarefa tarefa = abrirTarefa();
+		tarefa.setStatus(TarefaStatus.CONCLUIDA);
+		service.salvarTarefa(tarefa);
 		
-		Assertions.assertThrows(InvalidParameterException.class, () -> service.cancelarTarefaPorId(3));
+		Assertions.assertThrows(IllegalStateException.class, () -> service.cancelarTarefaPorId(id));
 	}
 	
 	@Test
 	void naoDeveConcluirTarefaCancelada() {
-		Tarefa t = service.getTarefaPorId(3);
-		t.setStatus(TarefaStatus.CANCELADA);
-		service.salvarTarefa(t);
+		Tarefa tarefa = abrirTarefa();
+		tarefa.setStatus(TarefaStatus.CANCELADA);
+		service.salvarTarefa(tarefa);
 		
-		Assertions.assertThrows(InvalidParameterException.class, () -> service.concluirTarefaPorId(3));
+		Assertions.assertThrows(IllegalStateException.class, () -> service.concluirTarefaPorId(id));
 	}
 }

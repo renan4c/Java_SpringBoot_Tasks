@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import br.com.tarefas.services.UserDetailsServiceImpl;
 
@@ -27,9 +28,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
 	
+	@Autowired
+	private AuthEntryPointJWT unauthorizedHandler; 
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public AuthTokenFilter authenticationJwtTokenFilter() {
+		return new AuthTokenFilter();
 	}
 	
 	@Bean
@@ -73,10 +82,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/h2-console/**").permitAll()
 			.anyRequest().authenticated()
 		.and()
-			.httpBasic();
-			
-			
-		
+			//.httpBasic();
+			.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class) // com JWT TOKEN
+			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
+				
 	}
 	
 }

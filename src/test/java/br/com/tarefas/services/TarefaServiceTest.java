@@ -36,7 +36,7 @@ public class TarefaServiceTest {
 		
 		Mockito.when(repositorio.findById(idExemplo)).thenReturn(Optional.of(t));
 		
-		Assertions.assertThrows(InvalidParameterException.class, () -> service.concluirTarefaPorId(idExemplo));
+		Assertions.assertThrows(IllegalStateException.class, () -> service.concluirTarefaPorId(idExemplo));
 	}
 	
 	@Test
@@ -49,7 +49,7 @@ public class TarefaServiceTest {
 		
 		Mockito.when(repositorio.findById(idExemplo)).thenReturn(Optional.of(t));
 		
-		Assertions.assertThrows(InvalidParameterException.class, () -> service.cancelarTarefaPorId(idExemplo));
+		Assertions.assertThrows(IllegalStateException.class, () -> service.cancelarTarefaPorId(idExemplo));
 	}
 	
 }

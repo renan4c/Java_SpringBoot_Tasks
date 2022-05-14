@@ -10,6 +10,7 @@ import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,5 +44,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		List<ErrorResponse> errors = fieldErrors.stream().map(x -> new ErrorResponse(x.getField(), x.getDefaultMessage()))
 				.collect(Collectors.toList());
 		return ResponseEntity.badRequest().body(errors);
+	}
+	
+	@ExceptionHandler(BadCredentialsException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	ErrorResponse entityBadCredentialsException(BadCredentialsException ex) {
+		return new ErrorResponse("Nome de Usuário e/ou senha inválidos");
 	}
 }
